@@ -1,0 +1,1 @@
+* python tools/coco2odvg.py --input ../../2022/dataset/coco-2017/annotations/instances_train2017.json --output ../../2022/dataset/coco-2017/annotations/coco2017_train_odvg.jsonl

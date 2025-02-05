@@ -1,0 +1,63 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "objects365_v1_json_convert",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/coco2odvgMM.py",
+            "args": [
+                "/Users/zhanghaining/2022/dataset/Objects365_v1/objects365_train.json",
+                "--output",
+                "/Users/zhanghaining/2022/dataset/Objects365_v1/objects365_train.jsonl",
+                "--dataset",
+                "o365v1"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "coco_json_convert",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/coco2odvgMM.py",
+            "args": [
+                "/Users/zhanghaining/2022/dataset/coco_2017/annotations/instances_train2017.json",
+                "--output",
+                "/Users/zhanghaining/2022/dataset/coco_2017/annotations/instances_train2017.jsonl",
+                "--dataset",
+                "coco"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "v3det_label_map",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/v3det2odvg.py",
+            "args": [
+                "--input",
+                "/Users/zhanghaining/2022/dataset/V3Det/v3det_2023_v1_train.json",
+                "--output",
+                "/Users/zhanghaining/2022/dataset/V3Det/v3det_2023_v1_label_map.json",
+                "--output_label_map"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "v3det_json_convert",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "tools/v3det2odvg.py",
+            "args": [
+                "--input",
+                "/Users/zhanghaining/2022/dataset/V3Det/v3det_2023_v1_train.json",
+                "--output",
+                "/Users/zhanghaining/2022/dataset/V3Det/v3det_2023_v1_train_odvg.jsonl"
+            ],
+            "console": "integratedTerminal"
+        }
+    ]
+}
