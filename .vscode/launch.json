@@ -58,6 +58,24 @@
                 "/Users/zhanghaining/2022/dataset/V3Det/v3det_2023_v1_train_odvg.jsonl"
             ],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Train GroundingDINO",
+            "type": "shell",
+            "request": "launch",
+            "command": "bash",
+            "args": [
+                "train_dist.sh",
+                "./config/cfg_odvg.py",
+                "./config/datasets_mixed_odvg.json",
+                "./output"
+            ],
+            "options": {
+                "env": {
+                    "CUDA_VISIBLE_DEVICES": "0",
+                    "GPU_NUM": "1"
+                }
+            }
         }
     ]
 }

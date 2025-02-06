@@ -1,16 +1,16 @@
 {
   "train": [
     {
-      "root": "/data1/zhn/2022/dataset/coco_2017/train2017/",
-      "anno": "/data1/zhn/2022/dataset/coco_2017/annotations/coco2017_train_odvg.jsonl",
-      "label_map": "/data1/zhn/2022/dataset/coco_2017/annotations/coco2017_label_map.json",
+      "root": "/data1/zhn/2022/dataset/aquarium_data/train",
+      "anno": "/data1/zhn/2022/dataset/aquarium_data/train.jsonl",
+      "label_map": "/data1/zhn/2022/dataset/aquarium_data/label.json",
       "dataset_mode": "odvg"
     }
   ],
   "val": [
     {
-      "root": "/data1/zhn/2022/dataset/coco_2017/val2017",
-      "anno": "/data1/zhn/2022/dataset/coco_2017/annotations/instances_val2017.json",
+      "root": "/data1/zhn/2022/dataset/aquarium_data/test",
+      "anno": "/data1/zhn/2022/dataset/aquarium_data/test/_annotations.coco.json",
       "label_map": null,
       "dataset_mode": "coco"
     }

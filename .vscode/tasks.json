@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "chmod",
+            "type": "shell",
+            "command": "chmod +x ${workspaceFolder}/train_dist.sh",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "run_train_script",
+            "type": "shell",
+            "command": "bash train_dist.sh ${CFG} ${DATASETS} ${OUTPUT_DIR}",
+            "options": {
+                "env": {
+                    "CFG": "./config/cfg_odvg.py",
+                    "DATASETS": "./config/datasets_mixed_odvg.json",
+                    "OUTPUT_DIR": "./output"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
