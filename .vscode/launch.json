@@ -76,6 +76,43 @@
                     "GPU_NUM": "1"
                 }
             }
+        },
+        {
+            "name": "Train GroundingDINO Single GPU",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "args": [
+                "--config_file",
+                "./config/cfg_odvg.py",
+                "--datasets",
+                "./config/datasets_mixed_odvg.json",
+                "--output_dir",
+                "./output",
+                "--pretrain_model_path",
+                "./groundingdino_swint_ogc.pth",
+                "--options",
+                "text_encoder_type=./bert"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "2",
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug Swin Transformer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/models/GroundingDINO/backbone/swin_transformer.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

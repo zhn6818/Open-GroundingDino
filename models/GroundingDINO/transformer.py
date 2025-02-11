@@ -37,6 +37,72 @@ from .utils import (
 )
 
 
+"""
+Transformer 是 Grounding DINO 的核心模块，实现了多模态特征融合和目标检测。
+
+架构设计：
+1. 多模态处理
+   - 视觉分支：使用可变形Transformer处理多尺度特征
+   - 文本分支：使用BERT编码文本信息
+   - 特征融合：通过注意力机制融合两种模态
+
+2. 编码器设计
+   - 可变形注意力：处理不同尺度的视觉特征
+   - 文本增强：增强文本特征的表达能力
+   - 特征融合：实现视觉和文本特征的双向交互
+
+3. 解码器设计
+   - 目标查询：学习目标相关的查询向量
+   - 交叉注意力：关联文本和视觉特征
+   - 边界框预测：生成目标检测结果
+
+4. 两阶段检测
+   - 第一阶段：生成候选框
+   - 第二阶段：细化检测结果
+   - 支持多种两阶段策略
+
+关键特性：
+1. 可变形注意力
+   - 自适应采样点
+   - 多尺度特征处理
+   - 灵活的感受野
+
+2. 文本引导
+   - BERT特征提取
+   - 文本交叉注意力
+   - 特征增强机制
+
+3. 查询设计
+   - 可学习的查询向量
+   - 参考点机制
+   - 位置编码
+
+4. 训练优化
+   - 梯度检查点
+   - 特征级联
+   - 残差连接
+
+工作流程：
+1. 特征提取
+   - 处理多尺度视觉特征
+   - 提取文本特征
+   - 准备位置编码
+
+2. 特征融合
+   - 视觉特征编码
+   - 文本特征增强
+   - 双向特征融合
+
+3. 目标检测
+   - 处理目标查询
+   - 预测边界框
+   - 优化检测结果
+
+4. 后处理
+   - 处理检测结果
+   - 生成最终预测
+   - 输出检测框
+"""
 class Transformer(nn.Module):
     def __init__(
         self,
@@ -72,6 +138,50 @@ class Transformer(nn.Module):
         fusion_dropout=0.1,
         fusion_droppath=0.0,
     ):
+        """
+        初始化 Transformer 模型的各个组件和参数
+
+        模型结构参数：
+            d_model (int): 模型特征维度，决定了模型的容量和表达能力
+            nhead (int): 注意力头数，多头注意力用于捕捉不同类型的依赖关系
+            num_queries (int): 目标查询数量，决定了最多可以检测的目标数
+            query_dim (int): 查询维度，通常为4，对应边界框的(x,y,w,h)
+
+        编码器参数：
+            num_encoder_layers (int): 编码器层数，更深的层数可以提取更复杂的特征
+            num_unicoder_layers (int): 单向编码器层数，用于特殊处理
+            num_feature_levels (int): 特征图层级数，用于多尺度特征处理
+            enc_n_points (int): 编码器采样点数，影响可变形注意力的感受野
+
+        解码器参数：
+            num_decoder_layers (int): 解码器层数，影响目标检测的精度
+            dec_n_points (int): 解码器采样点数，用于目标定位
+            return_intermediate_dec (bool): 是否返回中间层结果
+            num_patterns (int): 查询模式数量，增加查询的多样性
+
+        网络结构参数：
+            dim_feedforward (int): 前馈网络维度，增加模型的非线性能力
+            dropout (float): dropout比率，防止过拟合
+            activation (str): 激活函数类型，默认使用ReLU
+            normalize_before (bool): 是否在前进行归一化
+
+        查询和检测参数：
+            learnable_tgt_init (bool): 是否使用可学习的目标初始化
+            two_stage_type (str): 两阶段检测的类型，支持多种策略
+            embed_init_tgt (bool): 是否使用嵌入初始化目标
+
+        文本处理参数：
+            use_text_enhancer (bool): 是否使用文本特征增强
+            use_fusion_layer (bool): 是否使用特征融合层
+            use_text_cross_attention (bool): 是否使用文本交叉注意力
+            text_dropout (float): 文本特征的dropout比率
+            fusion_dropout (float): 特征融合的dropout比率
+            fusion_droppath (float): 特征融合的droppath比率
+
+        优化相关参数：
+            use_checkpoint (bool): 是否使用梯度检查点节省显存
+            use_transformer_ckpt (bool): 是否使用transformer检查点
+        """
         super().__init__()
         self.num_feature_levels = num_feature_levels
         self.num_encoder_layers = num_encoder_layers
