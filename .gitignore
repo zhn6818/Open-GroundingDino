@@ -161,3 +161,4 @@ cython_debug/
 /bert
 /output
 groundingdino_swint_ogc.pth
+/output_coco
