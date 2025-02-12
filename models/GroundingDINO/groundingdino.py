@@ -34,7 +34,11 @@ from groundingdino.util.misc import (
     nested_tensor_from_tensor_list,
 )
 from groundingdino.util.utils import get_phrases_from_posmap
-from groundingdino.util.visualizer import COCOVisualizer
+try:
+    from groundingdino.util.visualizer import COCOVisualizer
+except ImportError:
+    print("Warning: COCOVisualizer import failed, visualization may not work properly")
+    COCOVisualizer = None
 from groundingdino.util.vl_utils import create_positive_map_from_span
 
 from ..registry import MODULE_BUILD_FUNCS
@@ -108,6 +112,9 @@ class GroundingDINO(nn.Module):
         self.dn_labelbook_size = dn_labelbook_size
 
         # bert
+        print("----------------------------------------------------------")
+        print(text_encoder_type)
+        print("----------------------------------------------------------")
         self.tokenizer = get_tokenlizer.get_tokenlizer(text_encoder_type)
         self.bert = get_tokenlizer.get_pretrained_language_model(text_encoder_type)
         self.bert.pooler.dense.weight.requires_grad_(False)

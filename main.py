@@ -69,6 +69,10 @@ def get_args_parser():
     parser.add_argument("--local-rank", type=int, help='local rank for DistributedDataParallel')
     parser.add_argument('--amp', action='store_true',
                         help="Train with mixed precision")
+    parser.add_argument('--empty_cache_freq', default=1, type=int,
+                      help='how many iterations to empty cuda cache')
+    parser.add_argument('--gradient_accumulation_steps', default=1, type=int,
+                      help='number of gradient accumulation steps')
     return parser
 
 
@@ -278,6 +282,9 @@ def main(args):
     best_map_holder = BestMetricHolder(use_ema=False)
 
     for epoch in range(args.start_epoch, args.epochs):
+        # 每个 epoch 开始时清理缓存
+        torch.cuda.empty_cache()
+        
         epoch_start_time = time.time()
         if args.distributed:
             sampler_train.set_epoch(epoch)
@@ -305,12 +312,20 @@ def main(args):
                 }
 
                 utils.save_on_master(weights, checkpoint_path)
+        # 在评估前清理训练阶段的缓存
+        torch.cuda.empty_cache()
                 
         # eval
         test_stats, coco_evaluator = evaluate(
             model, criterion, postprocessors, data_loader_val, base_ds, device, args.output_dir,
             wo_class_error=wo_class_error, args=args, logger=(logger if args.save_log else None)
         )
+        
+        # 评估完成后清理缓存
+        if coco_evaluator is not None:
+            del coco_evaluator
+        torch.cuda.empty_cache()
+        
         map_regular = test_stats['coco_eval_bbox'][0]
         _isbest = best_map_holder.update(map_regular, epoch, is_ema=False)
         if _isbest:
@@ -354,6 +369,12 @@ def main(args):
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print('Training time {}'.format(total_time_str))
+
+    # 训练结束后清理所有缓存
+    del model
+    del optimizer
+    del lr_scheduler
+    torch.cuda.empty_cache()
 
     # remove the copied files.
     copyfilelist = vars(args).get('copyfilelist')
