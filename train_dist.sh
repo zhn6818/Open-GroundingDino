@@ -23,9 +23,9 @@ DATASETS=$2
 OUTPUT_DIR=$3
 
 # Set the environment variable for CUDA
-export CUDA_VISIBLE_DEVICES=4,5,6
+export CUDA_VISIBLE_DEVICES=1,2,4,5,6
 
-python -m torch.distributed.launch  --nproc_per_node=3 main.py \
+python -m torch.distributed.launch  --nproc_per_node=5 main.py \
     --config_file ${CFG} \
     --datasets ${DATASETS} \
     --output_dir ${OUTPUT_DIR} \
@@ -38,4 +38,4 @@ python -m torch.distributed.launch  --nproc_per_node=3 main.py \
 #     --output_dir ${OUTPUT_DIR} \
 #     --pretrain_model_path ./groundingdino_swint_ogc.pth \
 #     --options text_encoder_type="./bert"
-# ./train_dist.sh "./config/cfg_odvg.py" "./config/datasets_mixed_odvg.json" "./output_coco" 
+# ./train_dist.sh "./config/cfg_odvg.py" "./config/datasets_mixed_odvg.json" "./output_coco2" 
