@@ -1,9 +1,9 @@
-data_aug_scales = [480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800]
-data_aug_max_size = 1333
-data_aug_scales2_resize = [400, 500, 600]
-data_aug_scales2_crop = [384, 600]
+data_aug_scales = [320, 384, 448, 512, 576]
+data_aug_max_size = 640
+data_aug_scales2_resize = [320, 384, 448]
+data_aug_scales2_crop = [320, 448]
 data_aug_scale_overlap = None
-batch_size = 1
+batch_size = 2
 modelname = 'groundingdino'
 backbone = 'swin_T_224_1k'
 position_embedding = 'sine'

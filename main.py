@@ -203,10 +203,13 @@ def main(args):
         batch_sampler_train = torch.utils.data.BatchSampler(
             sampler_train, args.batch_size, drop_last=True)
         data_loader_train = DataLoader(dataset_train, batch_sampler=batch_sampler_train,
-                                    collate_fn=utils.collate_fn, num_workers=args.num_workers)
+                                    collate_fn=utils.collate_fn, num_workers=args.num_workers,
+                                    pin_memory=True)
 
-    data_loader_val = DataLoader(dataset_val, 4, sampler=sampler_val,
-                                 drop_last=False, collate_fn=utils.collate_fn, num_workers=args.num_workers)
+    data_loader_val = DataLoader(dataset_val, 1, sampler=sampler_val,
+                                 drop_last=False, collate_fn=utils.collate_fn, 
+                                 num_workers=args.num_workers,
+                                 pin_memory=True)
 
     if args.onecyclelr:
         lr_scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=args.lr, steps_per_epoch=len(data_loader_train), epochs=args.epochs, pct_start=0.2)
@@ -322,8 +325,8 @@ def main(args):
         )
         
         # 评估完成后清理缓存
-        if coco_evaluator is not None:
-            del coco_evaluator
+        # if coco_evaluator is not None:
+        #     del coco_evaluator
         torch.cuda.empty_cache()
         
         map_regular = test_stats['coco_eval_bbox'][0]
